@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 79
+# E203 conflicts with black slice formatting (see black docs)
+extend-ignore = E203
