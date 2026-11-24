@@ -22,6 +22,7 @@ Repository = "https://github.com/JohnnyFoulds/koine-suno"
 [project.scripts]
 koine-suno = "koine_suno.cli:main"
 koine-suno-mcp = "koine_suno.server:main"
+koine-ledger = "koine_suno.ledger_cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/koine_suno"]

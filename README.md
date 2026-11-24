@@ -89,6 +89,34 @@ Add the server to your MCP client configuration, for example
 
 The server supports both the 1.x and 2.x MCP Python SDKs.
 
+## Verifying sung text: `koine-ledger`
+
+Before a passage is sung, `koine-ledger` builds a token ledger for it and
+runs mechanical checks against published annotation, so that no wrong Greek
+is taught:
+
+| Check | Compares | Result |
+|---|---|---|
+| Text | Nestle 1904 word vs SBLGNT word (letters only) | FAIL if not identical |
+| Morphology | MACULA parse vs MorphGNT parse (lemma, case, number, gender, person, tense, voice, mood) | FAIL on any mismatch |
+| Sense | Louw–Nida sense in both editions of MACULA | WARN if different or missing |
+| Punctuation | punctuation after the word in both editions | WARN if different |
+
+```console
+git clone --depth 1 https://github.com/Clear-Bible/macula-greek
+git clone --depth 1 https://github.com/morphgnt/sblgnt
+export KOINE_MACULA=$PWD/macula-greek KOINE_MORPHGNT=$PWD/sblgnt
+
+koine-ledger "JHN 1:1-5"                 # verses
+koine-ledger "1JN 4:8!8-11"              # words 8-11 of one verse
+koine-ledger "JHN 1:1" --json song1.json # also write the ledger
+```
+
+Each output line shows the status, MACULA word id, Greek, parse, Louw–Nida
+sense, Suno respelling and gloss; the command exits 1 if any token fails. A
+failing token is never argued with: the passage is replaced. Details are in
+[docs/ledger.md](docs/ledger.md).
+
 ## Python
 
 ```python
@@ -129,3 +157,10 @@ and
 reference data in `tests/wiktionary_koi1_ref.json` was produced by the same
 module. As an adaptation, this project is distributed under the same licence;
 see [LICENSE](LICENSE).
+
+The test fixtures in `tests/fixtures/` are short excerpts (John 1:1–5,
+John 14:6, 1 John 1:5) of [MACULA Greek](https://github.com/Clear-Bible/macula-greek)
+(Clear Bible, Inc., CC BY 4.0) and
+[MorphGNT SBLGNT](https://github.com/morphgnt/sblgnt) (J. K. Tauber, parsing
+CC BY-SA). The SBLGNT text in them is subject to the SBLGNT EULA, as it is in the
+upstream repositories.
